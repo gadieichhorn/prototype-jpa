@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 public class JpaMessageTest extends AbstractJpaTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(JpaMessageTest.class);
-    private String name;
-    private String ref;
+    private final String name;
+    private final String ref;
     private Message instance;
 
     public JpaMessageTest(String name, String ref) {

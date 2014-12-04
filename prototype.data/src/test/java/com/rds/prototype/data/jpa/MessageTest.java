@@ -4,7 +4,6 @@
  */
 package com.rds.prototype.data.jpa;
 
-import com.rds.prototype.data.jpa.Message;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
