@@ -69,12 +69,12 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
         instance.setCache(mcs.serialiseMessages(cache));
         
         tx.begin();
-        em.persist(message);
         em.persist(instance);
         tx.commit();
-        assertTrue(message.getId() > 0L);
-        assertTrue(instance.getId() > 0L);
-        
+
+        // load persisted objects from DB
+        MessageCache mc1 = em.find(MessageCache.class, instance.getId());
+        assertTrue(mc1.getId()> 0L);        
     }
     
     @Test
@@ -82,12 +82,12 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
         instance.setCache(mcs.serialiseMessages(cache));
         
         tx.begin();
-        em.persist(message);
         em.persist(instance);
         tx.commit();
-        
-        assertTrue(message.getRevision() > 0L);
-        assertTrue(instance.getRevision() > 0L);
+
+        // loading persisted results
+        MessageCache mc1 = em.find(MessageCache.class, instance.getId());
+        assertTrue(mc1.getRevision() > 0L);
     }
     
     @Test
@@ -101,11 +101,14 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
         em.persist(message);
         em.persist(instance);
         tx.commit();
-        
-        assertNotNull(instance.getCache());
-        logger.info(Arrays.toString(instance.getCache()));
 
-        Map<String, Message> output = mcs.deserialiseMessages(instance.getCache());
+        // get the saved object from database
+        MessageCache results = em.find(MessageCache.class, instance.getId());
+
+        assertNotNull(results.getCache());
+        logger.info(Arrays.toString(results.getCache()));
+
+        Map<String, Message> output = mcs.deserialiseMessages(results.getCache());
         logger.info(output.toString());
         assertFalse(output.isEmpty());
 

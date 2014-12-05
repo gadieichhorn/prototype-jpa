@@ -26,29 +26,27 @@ public class JpaMessageTest extends AbstractJpaTestBase {
 
     private static final Logger logger = LoggerFactory.getLogger(JpaMessageTest.class);
     private final String name;
-    private final String ref;
     private Message instance;
 
-    public JpaMessageTest(String name, String ref) {
+    public JpaMessageTest(String name) {
         this.name = name;
-        this.ref = ref;
-        logger.info("NAME: {} REF: {}", name, ref);
+        logger.info("NAME: {}", name);
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         Object[][] data = new Object[][]{
-            {"Task", "1"},
-            {"Engineer", "2"},
-            {"Assignment", "3"},
-            {"Calendar", "4"}
+            {"Task"},
+            {"Engineer"},
+            {"Assignment"},
+            {"Calendar"}
         };
         return Arrays.asList(data);
     }
 
     @Before
     public void setUp() {
-        instance = new Message();
+        instance = new Message(name);
     }
 
     @After
@@ -60,20 +58,25 @@ public class JpaMessageTest extends AbstractJpaTestBase {
      */
     @Test
     public void testGetId() {
-        instance.setName(name);
+        
         tx.begin();
         em.persist(instance);
         tx.commit();
-        assertTrue(instance.getId() > 0L);
-    }
 
+        assertTrue(instance.getId() > 0L);
+        Message output = em.find(Message.class, instance.getId());
+        assertTrue(output.getId()> 0L);
+    }
+    
     @Test
     public void testGetRevision() {
-        instance.setName(name);
+
         tx.begin();
         em.persist(instance);
         tx.commit();
-        assertTrue(instance.getRevision() > 0L);
+
+        Message output = em.find(Message.class, instance.getId());
+        assertTrue(output.getRevision() > 0L);
     }
     
 }
