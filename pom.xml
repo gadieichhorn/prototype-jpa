@@ -11,6 +11,7 @@
     <url>http://maven.apache.org</url>
 
     <properties>
+        <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     
@@ -35,6 +36,10 @@
             </build>
         </profile>
     </profiles>
+
+    <modules>
+        <module>prototype.data</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
