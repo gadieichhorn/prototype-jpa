@@ -1,5 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.rds.prototype.data.jpa;
@@ -10,16 +11,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
  *
- * @author gadeichhorn
+ * @author Gadi
  */
-@Entity(name="Message")
-@Table(name = "InQueue")
-public class Message implements Serializable {
+@Entity(name = "MessageCache")
+@Table(name = "MessageCache")
+public class MessageCache implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -28,38 +30,33 @@ public class Message implements Serializable {
     @Column(name = "revision")
     @Version()
     private long revision;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "cache")
+    @Lob
+    private byte[] cache;
 
-    public Message(){
-        
-    }
-    
-    public Message(String name){
-        this.name = name;
-    }
-    
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setCache(byte[] cache) {
+        this.cache = cache;
+    }
+
+    public byte[] getCache() {
+        return cache;
     }
 
     public long getRevision() {
         return revision;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setRevision(long revision) {
         this.revision = revision;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

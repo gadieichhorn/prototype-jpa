@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.rds.prototype.data;
 
 import javax.persistence.EntityManager;
@@ -19,7 +15,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     com.rds.prototype.data.jpa.MessageTest.class,
-    com.rds.prototype.data.jpa.JpaMessageTest.class
+    com.rds.prototype.data.jpa.MessageCacheTest.class,
+    com.rds.prototype.data.jpa.JpaMessageTest.class,
+    com.rds.prototype.data.jpa.JpaMessageCacheTest.class
 })
 public class JpaModelTestSuite {
 

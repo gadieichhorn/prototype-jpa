@@ -3,6 +3,7 @@
   <persistence-unit name="proptotype" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.rds.prototype.data.jpa.Message</class>
+    <class>com.rds.prototype.data.jpa.MessageCache</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/prototype"/>
       <property name="javax.persistence.jdbc.password" value="app"/>
