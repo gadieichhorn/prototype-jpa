@@ -7,11 +7,11 @@ package com.rds.prototype.data.jpa;
 
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -27,23 +27,16 @@ public class MessageCache implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    
     @Column(name = "revision")
     @Version()
     private long revision;
-    @Column(name = "cache")
-    @Lob
-    private byte[] cache;
+
+    @Embedded
+    private Cache cache;
 
     public long getId() {
         return id;
-    }
-
-    public void setCache(byte[] cache) {
-        this.cache = cache;
-    }
-
-    public byte[] getCache() {
-        return cache;
     }
 
     public long getRevision() {
@@ -58,5 +51,12 @@ public class MessageCache implements Serializable {
         this.revision = revision;
     }
 
+    public void setCache(Cache cache) {
+        this.cache = cache;
+    }
 
+    public Cache getCache() {
+        return cache;
+    }
+    
 }

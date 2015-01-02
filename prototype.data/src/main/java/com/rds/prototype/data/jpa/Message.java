@@ -6,6 +6,7 @@ package com.rds.prototype.data.jpa;
 
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +18,7 @@ import javax.persistence.Version;
  *
  * @author gadeichhorn
  */
-@Entity(name="Message")
+@Entity(name = "Message")
 @Table(name = "InQueue")
 public class Message implements Serializable {
 
@@ -31,14 +32,17 @@ public class Message implements Serializable {
     @Column(name = "name")
     private String name;
 
-    public Message(){
-        
+    @Embedded
+    private Stamp stamp = new Stamp();
+
+    public Message() {
+
     }
-    
-    public Message(String name){
+
+    public Message(String name) {
         this.name = name;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -62,4 +66,13 @@ public class Message implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Stamp getStamp() {
+        return stamp;
+    }
+
+    public void setStamp(Stamp stamp) {
+        this.stamp = stamp;
+    }
+
 }

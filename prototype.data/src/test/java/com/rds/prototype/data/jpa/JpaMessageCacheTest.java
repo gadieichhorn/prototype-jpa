@@ -29,8 +29,7 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
     private final String ref;
     private Message message;
     private MessageCache instance;
-    private final Map<String, Message> cache = new HashMap<String, Message>();
-    private MessageCacheSerialiser mcs;
+    private final Map<String, Message> messages = new HashMap<String, Message>();
     
     public JpaMessageCacheTest(String name, String ref) {
         this.name = name;
@@ -50,11 +49,15 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         message = new Message(name);
-        cache.put(ref, message);
+        messages.put(ref, message);
         instance = new MessageCache();
-        mcs = new MessageCacheSerialiser();
+
+        Cache cache = new Cache();
+        cache.serialise(messages);
+        instance.setCache(cache);
+    
     }
     
     @After
@@ -66,8 +69,7 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
      */
     @Test
     public void testGetId() throws IOException {        
-        instance.setCache(mcs.serialiseMessages(cache));
-        
+
         tx.begin();
         em.persist(instance);
         tx.commit();
@@ -79,7 +81,6 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
     
     @Test
     public void testGetRevision() throws IOException {
-        instance.setCache(mcs.serialiseMessages(cache));
         
         tx.begin();
         em.persist(instance);
@@ -92,10 +93,6 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
     
     @Test
     public void testGetCache() throws IOException, ClassNotFoundException {
-        instance.setCache(mcs.serialiseMessages(cache));
-        
-        logger.info(cache.toString());
-        logger.info(Arrays.toString(instance.getCache()));
 
         tx.begin();
         em.persist(message);
@@ -106,9 +103,9 @@ public class JpaMessageCacheTest extends AbstractJpaTestBase {
         MessageCache results = em.find(MessageCache.class, instance.getId());
 
         assertNotNull(results.getCache());
-        logger.info(Arrays.toString(results.getCache()));
+        logger.info(results.getCache().toString());
 
-        Map<String, Message> output = mcs.deserialiseMessages(results.getCache());
+        Map<String, Message> output = (Map<String, Message>) results.getCache().deserialise();
         logger.info(output.toString());
         assertFalse(output.isEmpty());
 

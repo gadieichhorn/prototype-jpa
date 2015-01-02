@@ -71,12 +71,12 @@ public class MessageCacheTest {
     @Test
     public void testGetCache() throws IOException, ClassNotFoundException {
         MessageCache instance = new MessageCache();
-        Map<String, Message> payload = new HashMap<String, Message>();
-        MessageCacheSerialiser mcs = new MessageCacheSerialiser();
-        byte[] cache = mcs.serialiseMessages(payload);
+        Map<String, Message> messages = new HashMap<String, Message>();
+        Cache cache = new Cache();
+        cache.serialise(messages);
         instance.setCache(cache);
 
-        Map<String, Message> output = mcs.deserialiseMessages(instance.getCache());
+        Map<String, Message> output = (Map<String, Message>) cache.deserialise();
         assertNotNull(output);
         assertTrue(output instanceof HashMap);
     }
@@ -85,15 +85,18 @@ public class MessageCacheTest {
     public void testGetCacheWithMessages() throws IOException, ClassNotFoundException {
         logger.info("getName");
         MessageCache instance = new MessageCache();
-        Map<String, Message> payload = new HashMap<String, Message>();
-        payload.put("1", new Message("TEST"));
-        MessageCacheSerialiser mcs = new MessageCacheSerialiser();
-        byte[] cache = mcs.serialiseMessages(payload);
+        Map<String, Message> messages = new HashMap<String, Message>();
+        messages.put("1", new Message("TEST1"));
+        messages.put("2", new Message("TEST2"));
+
+        Cache cache = new Cache();
+        cache.serialise(messages);
         instance.setCache(cache);
 
-        Map<String, Message> output = mcs.deserialiseMessages(instance.getCache());
+        Map<String, Message> output = (Map<String, Message>) cache.deserialise();
         assertNotNull(output);
         assertTrue(output instanceof HashMap);
-        assertThat("Name", output.get("1").getName(), equalTo("TEST"));
+        assertThat("Name", output.get("1").getName(), equalTo("TEST1"));
+        assertThat("Name", output.get("2").getName(), equalTo("TEST2"));
     }
 }

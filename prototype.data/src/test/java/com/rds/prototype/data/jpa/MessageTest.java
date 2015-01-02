@@ -76,4 +76,12 @@ public class MessageTest {
         assertEquals("NAME", result);
     }
 
+    @Test
+    public void testGetStamp() {
+        logger.info("getStamp");
+        Message instance = new Message();
+        Stamp result = instance.getStamp();
+        assertTrue("milliseconds", result.getMilliseconds()>0);
+    }
+    
 }

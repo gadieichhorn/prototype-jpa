@@ -4,10 +4,15 @@
  */
 package com.rds.prototype.data.jpa;
 
-import com.rds.prototype.data.jpa.Message;
 import com.rds.prototype.data.AbstractJpaTestBase;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -58,16 +63,16 @@ public class JpaMessageTest extends AbstractJpaTestBase {
      */
     @Test
     public void testGetId() {
-        
+
         tx.begin();
         em.persist(instance);
         tx.commit();
 
         assertTrue(instance.getId() > 0L);
         Message output = em.find(Message.class, instance.getId());
-        assertTrue(output.getId()> 0L);
+        assertTrue(output.getId() > 0L);
     }
-    
+
     @Test
     public void testGetRevision() {
 
@@ -78,5 +83,49 @@ public class JpaMessageTest extends AbstractJpaTestBase {
         Message output = em.find(Message.class, instance.getId());
         assertTrue(output.getRevision() > 0L);
     }
-    
+
+    @Test
+    public void testGetStamp() {
+
+        tx.begin();
+        em.persist(instance);
+        tx.commit();
+
+        Message output = em.find(Message.class, instance.getId());
+        assertNotNull(output.getStamp());
+    }
+
+    @Test
+    public void testGetStampMilliseconds() {
+
+        tx.begin();
+        em.persist(instance);
+        tx.commit();
+
+        Message output = em.find(Message.class, instance.getId());
+        assertTrue(output.getStamp().getMilliseconds() > 0);
+    }
+
+    @Test
+    public void testGetStampYear() {
+
+        tx.begin();
+        em.persist(instance);
+        tx.commit();
+
+        Message output = em.find(Message.class, instance.getId());
+        assertTrue(output.getStamp().getYear() > 0);
+    }
+
+    @Test
+    public void testGetStampYearWithFilter() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+        Root<Message> root = cq.from(Message.class);
+        Predicate p = cb.conjunction();
+        /// p = cb.and(p, cb.equal(root.get(Message_.stamp)));
+        cq.where(p);
+        TypedQuery<Message> tq = em.createQuery(cq);
+        List<Message> messages = tq.getResultList();
+    }
 }
