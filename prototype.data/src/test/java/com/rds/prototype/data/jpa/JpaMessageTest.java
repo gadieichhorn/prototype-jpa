@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.junit.After;
@@ -119,13 +120,24 @@ public class JpaMessageTest extends AbstractJpaTestBase {
 
     @Test
     public void testGetStampYearWithFilter() {
+
+        instance.getStamp().setYear(2010);
+        tx.begin();
+        em.persist(instance);
+        tx.commit();
+        
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Message> cq = cb.createQuery(Message.class);
         Root<Message> root = cq.from(Message.class);
+
         Predicate p = cb.conjunction();
-        /// p = cb.and(p, cb.equal(root.get(Message_.stamp)));
+        ParameterExpression<Integer> year = cb.parameter(Integer.class, "year");
+        p = cb.and(p, cb.equal(root.get(Message_.stamp).get(Stamp_.year), year));
+
         cq.where(p);
-        TypedQuery<Message> tq = em.createQuery(cq);
+        TypedQuery<Message> tq = em.createQuery(cq).setParameter("year", 2010);
         List<Message> messages = tq.getResultList();
+        
+        assertFalse(messages.isEmpty());
     }
 }
