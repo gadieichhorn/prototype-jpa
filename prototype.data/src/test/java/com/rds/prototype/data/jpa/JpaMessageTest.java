@@ -119,6 +119,29 @@ public class JpaMessageTest extends AbstractJpaTestBase {
     }
 
     @Test
+    public void testGetStampYearWithFilterAndParameter() {
+
+        instance.getStamp().setYear(2001);
+        tx.begin();
+        em.persist(instance);
+        tx.commit();
+        
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+        Root<Message> root = cq.from(Message.class);
+
+        Predicate p = cb.conjunction();
+        ParameterExpression<Integer> year = cb.parameter(Integer.class, "year");
+        p = cb.and(p, cb.equal(root.get(Message_.stamp).get(Stamp_.year), year));
+
+        cq.where(p);
+        TypedQuery<Message> tq = em.createQuery(cq).setParameter("year", 2001);
+        List<Message> messages = tq.getResultList();
+        
+        assertFalse(messages.isEmpty());
+    }
+
+    @Test
     public void testGetStampYearWithFilter() {
 
         instance.getStamp().setYear(2010);
